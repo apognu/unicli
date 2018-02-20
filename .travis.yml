@@ -1,0 +1,21 @@
+language: elixir
+elixir: 1.6.1
+cache:
+  directories:
+    - deps
+before_deploy:
+  - mix escript.build
+deploy:
+  provider: releases
+  tag_name: master
+  name: master
+  body: "UniCLI release (master)"
+  api_key:
+    secure: p1HL2fmc2M5WxFBp364wYQW/LMgixYxrlepQYOVbhS4V9PTPcWxLwf/k6jb4B4kaz1/cvg2F0BQ0MjjjXLwDGEANO+Sx89Hn9zNy+3oCpW9kqsShNBR04nxHOO2ILR0/NEvDSfipXl2dVLXU1cinW51ihEO+k+iOuzVR0aEfd1hLBnWbC63T+0xMLq/9DWr8Js1khQvqzdUISy+h0r+hAT0y0pWjpZ795Iv6sQHrKspTC1kgfVJGhZ2M8iKy/v1k9oXqTeeDFrh+vTPp9jBLKcOdHXOjZliYtr5kcrknyBdpSqs1aOVusUgoig9XrqwDrJewQiWyHdzPCJPzmSL24Wep/o358LfjjaDZaCLZ/bG/ery1BJhC2Lc8enrZ+5mLlOfOeijOwXRKsHEu0M5T1EVgcEdWQDHBlBoO4KlmMVENPkZ9V1ta50d9MOu/pee50TQ5E8gEOC7rNTnsnRsj5cNofal7W+QyPzmfj0wB+ejDrJ48L9SIdYVYpRTjbr3s4bEuNvvPCP4hTza0cvbBryKl9dsbFJdwGboOZxDBOyBobbOGoxkJSj6IJFxchLKvfSN9bvjdymu83R+TO3VrGwxJBw6uHmqNFIBqPb4/BEMHxkzOWpT1QFTtyUQWEk1g6jEtqr4sya9eyQ3W7Tb6VsY7pPROQxQtIOOMutCdsUQ=
+  file: unicli
+  skip_cleanup: true
+  prerelease: true
+  overwrite: true
+  on:
+    repo: apognu/unicli
+    branch: master

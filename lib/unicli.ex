@@ -1,23 +1,39 @@
 defmodule UniCLI.Settings do
-  defstruct host: "", username: "", password: ""
+  defstruct host: "", username: "", password: "", directory: nil
 
   def check(settings) do
-    ~w(host username password)a
-    |> Enum.reduce(true, fn setting, acc ->
-      acc && Map.get(settings, setting) != ""
-    end)
+    if settings.host == "https://demo.ubnt.com" do
+      true
+    else
+      ~w(host username password)a
+      |> Enum.reduce(true, fn setting, acc ->
+        acc && Map.get(settings, setting) != ""
+      end)
+    end
   end
 end
 
 defmodule UniCLI do
   def main(args) do
+    directory =
+      case create_homedir() do
+        {:ok, directory} ->
+          directory
+
+        {:error, message} ->
+          IO.puts("WARNING: #{message}")
+
+          nil
+      end
+
     settings =
       with {:ok, [host: host, username: username, password: password]} <-
              Confex.fetch_env(:unicli, UniCLI.Controller) do
         settings = %UniCLI.Settings{
           host: host,
           username: username,
-          password: password
+          password: password,
+          directory: directory
         }
 
         unless UniCLI.Settings.check(settings) do
@@ -48,6 +64,15 @@ defmodule UniCLI do
 
       _ ->
         IO.puts("ERROR: unknown command")
+    end
+  end
+
+  def create_homedir() do
+    with {:ok, home} <- UniCLI.Util.env("HOME"),
+         :ok <- File.mkdir_p("#{home}/.unicli") do
+      {:ok, "#{home}/.unicli"}
+    else
+      _ -> {:error, "could not create ~/.unicli"}
     end
   end
 end
