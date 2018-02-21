@@ -3,6 +3,7 @@ defmodule UniCLI.Devices do
     "ID",
     "Model",
     "Name",
+    "State",
     "IP address",
     "MAC address",
     "Uptime",
@@ -10,6 +11,26 @@ defmodule UniCLI.Devices do
     "RX bytes",
     "TX bytes"
   ]
+
+  @states %{
+    # Restarting?
+    "0" => "Disconnected",
+    "1" => "Connected",
+    "2" => "Pending adoption",
+    "3" => "Pending upgrade",
+    "4" => "Upgrading",
+    "5" => "Provisionning",
+    "6" => "Heartbeat missed",
+    "7" => "Adopting",
+    "8" => "Deleting",
+    "9" => "Inform error",
+    "10" => "Adoption required",
+    "11" => "Adoption failed",
+    "12" => "Isolated",
+    "13" => "RF scanning",
+    "14" => "Managed by other",
+    "15" => "Unknown"
+  }
 
   def run(settings, subcommands, options) do
     case subcommands do
@@ -46,13 +67,27 @@ defmodule UniCLI.Devices do
             end
 
           uptime =
-            Timex.Duration.from_seconds(device["uptime"])
+            case device["uptime"] do
+              int when is_integer(int) ->
+                int
+
+              string when is_binary(string) ->
+                case Integer.parse(string) do
+                  {uptime, _} -> uptime
+                  :error -> 0
+                end
+
+              _ ->
+                0
+            end
+            |> Timex.Duration.from_seconds()
             |> Timex.format_duration(UniCLI.DurationFormatter)
 
           [
             device["_id"],
             device["model"],
             device["name"],
+            @states[to_string(device["state"])] || "Unknown",
             ip["ip"],
             device["mac"],
             uptime,
@@ -63,8 +98,8 @@ defmodule UniCLI.Devices do
                 else: "⬆ "
               )
             }#{device["version"]}",
-            Size.humanize!(device["rx_bytes"]),
-            Size.humanize!(device["tx_bytes"])
+            Size.humanize!(device["rx_bytes"] || 0),
+            Size.humanize!(device["tx_bytes"] || 0)
           ]
         end)
         |> UniCLI.Util.tableize(@list_headers)

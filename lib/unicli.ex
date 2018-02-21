@@ -62,6 +62,12 @@ defmodule UniCLI do
       {[:vouchers | subcommands], %Optimus.ParseResult{} = options} ->
         UniCLI.Vouchers.run(settings, subcommands, options)
 
+      {[:events | subcommands], options} ->
+        UniCLI.Events.Events.run(settings, subcommands, options)
+
+      {[:alarms | subcommands], options} ->
+        UniCLI.Events.Alarms.run(settings, subcommands, options)
+
       _ ->
         IO.puts("ERROR: unknown command")
     end

@@ -245,6 +245,14 @@ defmodule CLI do
               ]
             ]
           ]
+        ],
+        events: [
+          name: "events",
+          description: "list events"
+        ],
+        alarms: [
+          name: "alarms",
+          description: "list alarms"
         ]
       ]
     ]

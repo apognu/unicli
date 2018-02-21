@@ -27,7 +27,12 @@ defmodule UniCLI.DurationFormatter do
   defp do_format([{:s, _} | rest], str, locale), do: do_format(rest, str, locale)
 
   defp do_format([{unit, value} | rest], str, locale) do
-    unit = Atom.to_string(unit)
+    unit =
+      if unit in ~w(millisecond microsecond)a do
+        ""
+      else
+        Atom.to_string(unit)
+      end
 
     unit_with_value =
       Translator.translate_plural(locale, "units", "%{count}#{unit}", "%{count}#{unit}", value)
