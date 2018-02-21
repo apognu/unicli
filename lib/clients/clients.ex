@@ -3,12 +3,15 @@ defmodule UniCLI.Clients do
     "MAC address",
     "Make",
     "Hostname",
-    "Fixed IP address",
+    "Network",
+    "IP address",
     "Last seen",
     "Wired?",
     "Guest?",
-    "RX bytes",
-    "TX bytes"
+    "WAN up",
+    "WAN down",
+    "LAN up",
+    "LAN down"
   ]
 
   def run(settings, subcommands, options) do
@@ -20,7 +23,7 @@ defmodule UniCLI.Clients do
   end
 
   def list(settings, _) do
-    case UniCLI.HTTP.request(settings, :get, "/stat/alluser") do
+    case UniCLI.HTTP.request(settings, :get, "/stat/sta") do
       {:ok, %{"data" => clients}} ->
         clients
         |> Enum.map(fn client ->
@@ -38,12 +41,15 @@ defmodule UniCLI.Clients do
             client["mac"],
             client["oui"],
             client["hostname"],
-            client["fixed_ip"],
+            client["network"],
+            client["ip"],
             seen,
             if(client["is_wired"], do: "✓", else: "✗"),
             if(client["is_guest"], do: "✓", else: "✗"),
             Size.humanize!(client["rx_bytes"] || 0),
-            Size.humanize!(client["tx_bytes"] || 0)
+            Size.humanize!(client["tx_bytes"] || 0),
+            Size.humanize!(client["wired-rx_bytes"] || 0),
+            Size.humanize!(client["wired-tx_bytes"] || 0)
           ]
         end)
         |> UniCLI.Util.tableize(@list_headers)
