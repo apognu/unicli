@@ -41,7 +41,7 @@ defmodule UniCLI.Networks do
         |> UniCLI.Util.tableize(@list_headers)
 
       {:error, error} ->
-        IO.puts("ERROR: could not get data (#{error})")
+        IO.puts("ERROR: could not get data: #{error}")
     end
   end
 end

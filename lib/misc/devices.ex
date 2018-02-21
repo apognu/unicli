@@ -10,8 +10,8 @@ defmodule UniCLI.Misc.Devices do
           {:ok, hd(device)}
         end
 
-      {:error} ->
-        {:error}
+      {:error, error} ->
+        {:error, error}
     end
   end
 end

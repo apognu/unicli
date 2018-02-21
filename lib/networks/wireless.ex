@@ -33,17 +33,17 @@ defmodule UniCLI.Networks.Wireless do
         |> UniCLI.Util.tableize(@list_headers)
 
       {:error, error} ->
-        IO.puts("ERROR: could not get data (#{error})")
+        IO.puts("ERROR: could not get data: #{error}")
     end
   end
 
   def set_state(settings, state, %Optimus.ParseResult{args: %{id: id}}) do
     case UniCLI.HTTP.request(settings, :put, "/rest/wlanconf/" <> id, %{"enabled" => state}) do
       {:ok, _} ->
-        IO.puts("Wireless network #{id} state changed.")
+        IO.puts("State for wireless network '#{id}' was changed.")
 
       {:error, error} ->
-        IO.puts("ERROR: could not get data (#{error})")
+        IO.puts("ERROR: could not set state: #{error}")
     end
   end
 end

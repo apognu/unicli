@@ -3,6 +3,8 @@ elixir: 1.6.1
 cache:
   directories:
     - deps
+script:
+  - echo 'NOOP'
 before_deploy:
   - mix escript.build
 deploy:

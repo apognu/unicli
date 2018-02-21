@@ -16,6 +16,28 @@ defmodule CLI do
               name: "list",
               description: "list all adopted UniFi devices"
             ],
+            locate: [
+              name: "locate",
+              description: "enable or disable blinking of device LEDs",
+              args: [
+                id: [
+                  value_name: "DEVICE_ID",
+                  help: "ID of the device to locate",
+                  required: true,
+                  parser: :string
+                ],
+                state: [
+                  value_name: "STATE",
+                  help: "ID of the device to locate",
+                  required: true,
+                  parser: fn
+                    "on" -> {:ok, true}
+                    "off" -> {:ok, false}
+                    _ -> {:error, "only 'on' and 'off' are accepted"}
+                  end
+                ]
+              ]
+            ],
             ports: [
               name: "ports",
               description: "control device ports",

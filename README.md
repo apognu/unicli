@@ -71,6 +71,13 @@ unicli devices ports [enable|disable] dmu898nx3c4sd8ylb3ctrfhd 1,2,10-20
 Port state dmu898nx3c4sd8ylb3ctrfhd/1,2,10-20 state changed.
 ```
 
+#### Turn location LED on/off
+
+```
+$ unicli devices locate dmu898nx3c4sd8ylb3ctrfhd on
+Location state for 'dmu898nx3c4sd8ylb3ctrfhd' was changed.
+```
+
 ### Networks
 
 #### List networks

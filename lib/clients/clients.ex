@@ -49,7 +49,7 @@ defmodule UniCLI.Clients do
         |> UniCLI.Util.tableize(@list_headers)
 
       {:error, error} ->
-        IO.puts("ERROR: could not get data (#{error})")
+        IO.puts("ERROR: could not get data: #{error}")
     end
   end
 
@@ -61,10 +61,10 @@ defmodule UniCLI.Clients do
            "mac" => client_mac
          }) do
       {:ok, _} ->
-        IO.puts("Client #{client_mac} status changed.")
+        IO.puts("Block state for '#{client_mac}' was changed.")
 
       {:error, error} ->
-        IO.puts("ERROR: could not set port state (#{error})")
+        IO.puts("ERROR: could not set state: #{error}")
     end
   end
 end

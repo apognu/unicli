@@ -54,7 +54,7 @@ defmodule UniCLI.Vouchers do
         |> UniCLI.Util.tableize(@list_headers)
 
       {:error, error} ->
-        IO.puts("ERROR: could not get data (#{error})")
+        IO.puts("ERROR: could not get data: #{error}")
     end
   end
 
@@ -86,7 +86,7 @@ defmodule UniCLI.Vouchers do
         IO.puts("Voucher was created.")
 
       {:error, error} ->
-        IO.puts("ERROR: could not set port state (#{error})")
+        IO.puts("ERROR: could not create voucher: #{error}")
     end
   end
 
@@ -96,10 +96,10 @@ defmodule UniCLI.Vouchers do
            "_id" => id
          }) do
       {:ok, _} ->
-        IO.puts("Voucher #{id} was revoked.")
+        IO.puts("Voucher '#{id}' was revoked.")
 
       {:error, error} ->
-        IO.puts("ERROR: could not set port state (#{error})")
+        IO.puts("ERROR: could not revoke voucher: #{error}")
     end
   end
 
