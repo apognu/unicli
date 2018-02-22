@@ -3,6 +3,7 @@ defmodule UniCLI.Events.Alarms do
     "",
     "Time",
     "System",
+    "Device",
     "Message"
   ]
 
@@ -10,11 +11,19 @@ defmodule UniCLI.Events.Alarms do
     case UniCLI.HTTP.request(settings, :post, "/stat/alarm", %{"_limit" => 50}) do
       {:ok, %{"data" => alarms}} ->
         Enum.map(alarms, fn alarm ->
+          device =
+            cond do
+              alarm["ap_name"] -> alarm["ap_name"]
+              alarm["gw_name"] -> alarm["gw_name"]
+              true -> "-"
+            end
+
           [
             if(alarm["archived"], do: "✓", else: "!"),
             Timex.from_unix(alarm["time"], :millisecond)
             |> Timex.format!("%Y/%m/%d %l:%M%P", :strftime),
             String.upcase(alarm["subsystem"]),
+            device,
             alarm["msg"]
           ]
         end)

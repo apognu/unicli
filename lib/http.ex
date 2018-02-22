@@ -70,6 +70,7 @@ defmodule UniCLI.HTTP do
            get(settings.host <> "/api/s/default" <> url, headers: cookies) do
       {:ok, body}
     else
+      {:ok, %Tesla.Env{status: code}} -> {:error, code}
       {:error, error} -> {:error, error}
     end
   end
@@ -80,8 +81,8 @@ defmodule UniCLI.HTTP do
            post(settings.host <> "/api/s/default" <> url, body, headers: cookies) do
       {:ok, body}
     else
-      [:error, error] ->
-        {:error, error}
+      {:ok, %Tesla.Env{status: code}} -> {:error, code}
+      {:error, error} -> {:error, error}
     end
   end
 
@@ -91,8 +92,8 @@ defmodule UniCLI.HTTP do
            put(settings.host <> "/api/s/default" <> url, body, headers: cookies) do
       {:ok, body}
     else
-      [:error, error] ->
-        {:error, error}
+      {:ok, %Tesla.Env{status: code}} -> {:error, code}
+      {:error, error} -> {:error, error}
     end
   end
 end

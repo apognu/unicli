@@ -56,6 +56,7 @@ defmodule UniCLI.Devices do
         |> Enum.map(fn device ->
           ip =
             if Map.has_key?(device, "network_table") do
+              # Router
               network =
                 Enum.filter(device["network_table"], fn network ->
                   network["attr_no_delete"] == true
@@ -63,32 +64,36 @@ defmodule UniCLI.Devices do
 
               if length(network) == 0, do: %{"ip" => ""}, else: hd(network)
             else
+              # Other devices
               device
             end
 
           uptime =
             case device["uptime"] do
               int when is_integer(int) ->
-                int
+                int |> Timex.Duration.from_seconds()
+                |> Timex.format_duration(UniCLI.DurationFormatter)
 
               string when is_binary(string) ->
                 case Integer.parse(string) do
-                  {uptime, _} -> uptime
-                  :error -> 0
+                  {uptime, _} ->
+                    uptime |> Timex.Duration.from_seconds()
+                    |> Timex.format_duration(UniCLI.DurationFormatter)
+
+                  :error ->
+                    "-"
                 end
 
               _ ->
-                0
+                "-"
             end
-            |> Timex.Duration.from_seconds()
-            |> Timex.format_duration(UniCLI.DurationFormatter)
 
           [
             device["_id"],
             device["model"],
             device["name"],
             @states[to_string(device["state"])] || "Unknown",
-            ip["ip"],
+            if(ip["ip"] != "", do: ip["ip"], else: "-"),
             device["mac"],
             uptime,
             "#{

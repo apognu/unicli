@@ -33,10 +33,10 @@ defmodule UniCLI.Devices.Ports do
                 if(port["enable"], do: "✓", else: "✗"),
                 if(port["up"], do: "UP", else: "DOWN"),
                 port["stp_state"] || "-",
-                port["speed"],
-                if(port["full_duplex"], do: "FDX", else: "HDX"),
-                Size.humanize!(port["rx_bytes"]),
-                Size.humanize!(port["tx_bytes"])
+                if(port["up"], do: port["speed"], else: "-"),
+                if(port["up"], do: if(port["full_duplex"], do: "FDX", else: "HDX"), else: "-"),
+                Size.humanize!(port["rx_bytes"] || 0),
+                Size.humanize!(port["tx_bytes"] || 0)
               ]
             end)
             |> UniCLI.Util.tableize(@list_headers)
@@ -80,7 +80,7 @@ defmodule UniCLI.Devices.Ports do
         end)
         |> Enum.reject(&is_nil/1)
 
-      if Enum.any?(ports, fn port -> port > length(device["port_table"]) end) do
+      if !port_overrides or Enum.any?(ports, fn port -> port > length(device["port_table"]) end) do
         IO.puts("ERROR: invalid port ID")
       else
         port_overrides =
@@ -109,7 +109,7 @@ defmodule UniCLI.Devices.Ports do
                "port_overrides" => port_overrides
              }) do
           {:ok, _} ->
-            IO.puts("Port state for '#{device_id}/#{id}' was changed.")
+            IO.puts("Port state for '#{device_id} → #{id}' was changed.")
 
           {:error, error} ->
             IO.puts("ERROR: could not set port state: #{error}")

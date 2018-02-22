@@ -16,16 +16,18 @@ You may create another user, dedicated to be used with UniCLI.
 
 In order to pass those settings to UniCLI, pass the following environment variables to the program: ```UNIFI_HOST```, ```UNIFI_USERNAME```, ```UNIFI_PASSWORD```.
 
+UniCLI creates ```~/.unicli/cookies.json``` to store fetched cookies and reuse them for the next requests.
+
 ### Devices
 
 #### List devices
 
 ```
 $ unicli devices list
-ID                        Model   Name      IP address     MAC address         Uptime      Version            RX bytes    TX bytes
+ID                        Model   Name     State          IP address     MAC address         Uptime      Version            RX bytes    TX bytes
 
-dmu898nx3c4sd8ylb3ctrfhd  UGW3    Gateway   172.17.0.254   00:11:22:33:44:55   1d 5h 52m   ✓ 4.4.18.5052168   3.53 GB     3.59 GB
-dmu898nx3c4sd8ylb3ctrfhd  US24    Switch    172.17.0.1     00:11:22:33:44:55   2d 4h 42m   ✓ 3.9.19.8123      302.66 MB   2.73 GB
+dmu898nx3c4sd8ylb3ctrfhd  UGW3    Gateway  Connected      172.17.0.254   00:11:22:33:44:55   1d 5h 52m   ✓ 4.4.18.5052168   3.53 GB     3.59 GB
+dmu898nx3c4sd8ylb3ctrfhd  US24    Switch   Provisionning  172.17.0.1     00:11:22:33:44:55   2d 4h 42m   ✓ 3.9.19.8123      302.66 MB   2.73 GB
 ```
 
 #### List ports on a device
@@ -66,9 +68,11 @@ ID  Name      Enabled   Link   STP state    Speed   Duplex   RX bytes    TX byte
 
 You may use ports range syntax to specify which port to enable or disable. ```1,10,20``` means ports 1, 10 and 20. ```10-20``` means ports 10 through 20.
 
+Enabling ports will put them in the default **All** profile.
+
 ```
 unicli devices ports [enable|disable] dmu898nx3c4sd8ylb3ctrfhd 1,2,10-20
-Port state dmu898nx3c4sd8ylb3ctrfhd/1,2,10-20 state changed.
+Port state for 'dmu898nx3c4sd8ylb3ctrfhd → 1,2,10-20' state changed.
 ```
 
 #### Turn location LED on/off
@@ -84,29 +88,29 @@ Location state for 'dmu898nx3c4sd8ylb3ctrfhd' was changed.
 
 ```
 $ unicli networks list
-ID                        Name                  Enabled   Purpose     Subnet             Domain                 VLAN
+ID                        Name                  Enabled   Purpose     Subnet             Domain             VLAN
 
 dmu898nx3c4sd8ylb3ctrfhd  00 - Management       ✓         corporate   172.17.0.254/24    mgmt.acme.local
-dmu898nx3c4sd8ylb3ctrfhd  10 - WiFi Guests      ✓         guest       172.17.10.254/24   guests.acme.local   10
-dmu898nx3c4sd8ylb3ctrfhd  20 - WiFi             ✓         corporate   172.17.20.254/24   wifi.acme.local     20
-dmu898nx3c4sd8ylb3ctrfhd  30 - LAN              ✓         corporate   172.17.30.254/24   lan.acme.local      30
+dmu898nx3c4sd8ylb3ctrfhd  10 - WiFi Guests      ✓         guest       172.17.10.254/24   guests.acme.local  10
+dmu898nx3c4sd8ylb3ctrfhd  20 - WiFi             ✓         corporate   172.17.20.254/24   wifi.acme.local    20
+dmu898nx3c4sd8ylb3ctrfhd  30 - LAN              ✓         corporate   172.17.30.254/24   lan.acme.local     30
 ```
 
 #### List wireless networks
 
 ```
 $ unicli networks wlan list
-ID                        Name             Enabled   Security   Encryption   VLAN
+ID                        Name             Enabled   Security   Encryption  VLAN
 
-dmu898nx3c4sd8ylb3ctrfhd  ACME             ✓         wpapsk     wpa2/ccmp    20
-dmu898nx3c4sd8ylb3ctrfhd  ACME Guests      ✗         open       wpa2/ccmp    10
+dmu898nx3c4sd8ylb3ctrfhd  ACME             ✓         wpapsk     wpa2/ccmp   20
+dmu898nx3c4sd8ylb3ctrfhd  ACME Guests      ✗         open       wpa2/ccmp   10
 ```
 
 #### Enable/disable wireless networks
 
 ```
 $ unicli networks wlan [enable|disable] dmu898nx3c4sd8ylb3ctrfhd
-Wireless network dmu898nx3c4sd8ylb3ctrfhd state changed.
+Wireless network 'dmu898nx3c4sd8ylb3ctrfhd' state changed.
 ```
 
 ### Clients
@@ -115,19 +119,19 @@ Wireless network dmu898nx3c4sd8ylb3ctrfhd state changed.
 
 ```
 $ unicli clients list
-MAC address        Make       Hostname   Fixed IP address   Last seen    Wired?   Guest?   RX bytes   TX bytes
+MAC address        Make       Hostname  Network          IP address        Last seen    Wired?   Guest?   WAN up     WAN down  LAN up  LAN down
 
-00:11:22:33:44:55  LcfcHefe   tialus                        1 day ago    ✓        ✗        10.62 MB   87.98 MB
-00:11:22:33:44:55  Ubiquiti                                 2 days ago   ✓        ✗        0 B        0 B
-00:11:22:33:44:55  Raspberr   alarm      192.22.0.253       2 days ago   ✓        ✗        0 B        0 B
-00:11:22:33:44:55  Manufact                                 Never        ✓        ✗        0 B        0 B
+00:11:22:33:44:55  LcfcHefe   tialus    00 - Management                    1 day ago    ✓        ✗        10.62 MB   87.98 MB  0B      0B
+00:11:22:33:44:55  Ubiquiti                                                2 days ago   ✓        ✗        0 B        0 B       0B      0B
+00:11:22:33:44:55  Raspberr   alarm     20 - WiFi        192.22.0.253      2 days ago   ✓        ✗        0 B        0 B       0B      0B
+00:11:22:33:44:55  Lenovo                                                  Never        ✓        ✗        0 B        0 B       0B      0B
 ```
 
 #### Block/unblock a client
 
 ```
 $ unicli clients block 00:12:34:56:78
-Client 00:11:22:33:44:55 status changed.
+Client '00:11:22:33:44:55' was blocked.
 ```
 
 ### Vouchers
@@ -178,5 +182,29 @@ Voucher was created.
 
 ```
 $ unicli vouchers revoke dmu898nx3c4sd8ylb3ctrfhd
-Voucher dmu898nx3c4sd8ylb3ctrfhd was revoked.
+Voucher 'dmu898nx3c4sd8ylb3ctrfhd' was revoked.
+```
+
+### Events and alarms
+
+```
+$ unicli events
+Time                System   Device          Message
+
+2018/02/22 10:22am           -              Admin[rose.tyler] log in from 172.22.0.101
+2018/02/22 10:14am  WLAN     -              User[00:11:22:33:44:55] disconnected from "20 - WiFi" (16m 11s connected, 460.00 bytes)
+2018/02/22  9:56am  WLAN     -              User[00:11:22:33:44:55] has connected to 20 - WiFi
+2018/02/22  8:49am  WLAN     pegasus        User[00:11:22:33:44:55] has connected to AP[78:8a:20:d0:9f:8f] with ssid "ACME" on "channel 36(na)"
+2018/02/22  8:39am  LAN      orion          User[00:11:22:33:44:55] has connected to 00 - Management
+2018/02/21  5:19pm  WLAN     CEO Office AP  AP[00:11:22:33:44:55] was connected
+2018/02/21  5:18pm  WLAN     CEO Office AP  AP[00:11:22:33:44:55] was restarted by Admin[rose.tyler]
+
+$ unicli alarms
+Time                    System   Device   Message
+
+!  2018/02/21  8:21pm   WLAN     AP-A     AP[00:11:22:33:44:55] was disconnected
+!  2018/02/21  8:21pm   WLAN     AP-B     AP[00:11:22:33:44:55] was disconnected
+✓  2018/02/21  8:21pm   WLAN     AP-A     AP[00:11:22:33:44:55] was disconnected
+✓  2018/02/21  8:21pm   WLAN     AP-D     AP[00:11:22:33:44:55] was disconnected
+✓  2018/02/21  8:21pm   WLAN     AP-B     AP[00:11:22:33:44:55] was disconnected
 ```

@@ -19,6 +19,8 @@ defmodule UniCLI.Misc.Ports do
   def list_port_overrides(settings, mac) do
     case UniCLI.HTTP.request(settings, :get, "/stat/device/" <> mac) do
       {:ok, %{"data" => device}} ->
+        IO.inspect(device, limit: :infinity)
+
         if length(device) == 0 do
           {:error, "the specified device does not exist"}
         else

@@ -67,7 +67,11 @@ defmodule UniCLI.Clients do
            "mac" => client_mac
          }) do
       {:ok, _} ->
-        IO.puts("Block state for '#{client_mac}' was changed.")
+        if state do
+          IO.puts("Client '#{client_mac}' was blocked.")
+        else
+          IO.puts("Client '#{client_mac}' was unblocked.")
+        end
 
       {:error, error} ->
         IO.puts("ERROR: could not set state: #{error}")
