@@ -1,7 +1,12 @@
 defmodule UniCLI.Util do
   @sites_headers [
     "ID",
-    "Name"
+    "Name",
+    "Alerts",
+    "WAN",
+    "LAN",
+    "WLAN",
+    "VPN"
   ]
 
   def env(var) do
@@ -15,9 +20,23 @@ defmodule UniCLI.Util do
     case UniCLI.HTTP.sites(settings) do
       {:ok, %{"data" => sites}} ->
         Enum.map(sites, fn site ->
+          status =
+            site["health"]
+            |> Enum.map(fn health ->
+              {health["subsystem"], health["status"] == "ok"}
+            end)
+            |> Map.new()
+
+          IO.inspect(status)
+
           [
             site["name"],
-            site["desc"]
+            site["desc"],
+            site["num_new_alarms"],
+            if(status["wan"], do: "✓", else: "✗"),
+            if(status["lan"], do: "✓", else: "✗"),
+            if(status["www"], do: "✓", else: "✗"),
+            if(status["vpn"], do: "✓", else: "✗")
           ]
         end)
         |> UniCLI.Util.tableize(@sites_headers)
