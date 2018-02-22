@@ -46,6 +46,9 @@ defmodule UniCLI.Devices do
 
       [:locate] ->
         locate(settings, options)
+
+      [:provision] ->
+        UniCLI.Devices.Manage.provision(settings, options)
     end
   end
 

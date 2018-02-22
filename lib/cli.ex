@@ -5,8 +5,7 @@ defmodule CLI do
       long: "--site",
       help: "which site to talk to",
       default: "default",
-      parser: :string,
-      required: true
+      parser: :string
     ]
   ]
 
@@ -31,6 +30,24 @@ defmodule CLI do
               name: "list",
               description: "list all adopted UniFi devices",
               options: @site
+            ],
+            adopt: [
+              name: "adopt",
+              description: "adopt a new device",
+              options: @site
+            ],
+            provision: [
+              name: "provision",
+              description: "force provisionning of a device",
+              options: @site,
+              args: [
+                id: [
+                  value_name: "DEVICE_ID",
+                  help: "ID of the device to provision",
+                  required: true,
+                  parser: :string
+                ]
+              ]
             ],
             locate: [
               name: "locate",
