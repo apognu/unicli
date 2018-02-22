@@ -19,6 +19,10 @@ defmodule CLI do
       allow_unknown_flags: false,
       allow_double_dash: true,
       subcommands: [
+        sites: [
+          name: "sites",
+          description: "list all sites configured on the controller"
+        ],
         devices: [
           name: "devices",
           description: "control UniFi devices",

@@ -62,6 +62,17 @@ defmodule UniCLI.HTTP do
     end
   end
 
+  def sites(settings) do
+    with {:ok, cookies} <- login(settings),
+         {:ok, %Tesla.Env{status: 200, body: body}} <-
+           get(settings.host <> "/api/stat/sites", headers: cookies) do
+      {:ok, body}
+    else
+      {:ok, %Tesla.Env{status: code}} -> {:error, code}
+      {:error, error} -> {:error, error}
+    end
+  end
+
   def request(settings, method, url, body \\ %{})
 
   def request(settings, :get, url, _body) do

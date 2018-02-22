@@ -58,6 +58,9 @@ defmodule UniCLI do
     settings = %{settings | site: site}
 
     case parser do
+      {[:sites | subcommands], options} ->
+        UniCLI.Util.sites(settings, subcommands, options)
+
       {[:devices | subcommands], %Optimus.ParseResult{} = options} ->
         UniCLI.Devices.run(settings, subcommands, options)
 

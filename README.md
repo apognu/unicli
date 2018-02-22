@@ -28,6 +28,19 @@ $ docker build -t unicli:latest .
 $ docker run -e UNIFI_HOST=https://10.0.0.1:8443 -e UNIFI_USERNAME=rose.tyler -e UNIFI_PASSWORD=superpassword unicli:latest devices list
 ```
 
+### Sites
+
+You can list all your sites with the following command:
+
+```
+$ unicli sites
+ID       Name
+
+default  ACME - Headquarters
+```
+
+You can then use the value in the ```ID``` column to scope your request to a specific site (with the ```-s``` option). If ommited, the site defaults to ```default```.
+
 ### Devices
 
 #### List devices
