@@ -11,9 +11,9 @@ defmodule UniCLI.Devices.Manage do
         {:error, error} ->
           IO.puts("ERROR: could not set state: #{error}")
       end
+    else
+      _ -> IO.puts("ERROR: could not find device")
     end
-  else
-    _ -> IO.puts("ERROR: could not find device")
   end
 
   def adopt(settings, %Optimus.ParseResult{args: %{mac: mac}}) do

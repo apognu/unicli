@@ -53,6 +53,20 @@ dmu898nx3c4sd8ylb3ctrfhd  UGW3    Gateway  Connected      172.17.0.254   00:11:2
 dmu898nx3c4sd8ylb3ctrfhd  US24    Switch   Provisionning  172.17.0.1     00:11:22:33:44:55   2d 4h 42m   ✓ 3.9.19.8123      302.66 MB   2.73 GB
 ```
 
+#### Adopt a device
+
+```
+$ unicli devices adopt 00:11:22:33:44:55
+Device '00:11:22:33:44:55' is being adopted.
+```
+
+#### Force provisionning of a device
+
+```
+$ unicli devices provision dmu898nx3c4sd8ylb3ctrfhd                                                                                                                                                                                                                 master:48966ca
+Device 'dmu898nx3c4sd8ylb3ctrfhd' is provisionning.
+```
+
 #### List ports on a device
 
 ```
