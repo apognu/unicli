@@ -23,13 +23,17 @@ defmodule UniCLI.Vouchers do
       {:ok, %{"data" => vouchers}} ->
         vouchers
         |> Enum.map(fn voucher ->
+          code =
+            voucher["code"] |> String.codepoints() |> Enum.chunk(5) |> Enum.map(&Enum.join/1)
+            |> Enum.join("-")
+
           duration =
             Timex.Duration.from_minutes(voucher["duration"])
             |> Timex.format_duration(UniCLI.DurationFormatter)
 
           [
             voucher["_id"],
-            voucher["code"],
+            code,
             duration,
             quota(voucher["used"], voucher["quota"]),
             if(

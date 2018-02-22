@@ -13,6 +13,7 @@ defmodule UniCLI.Events.Events do
           device =
             cond do
               event["hostname"] -> event["hostname"]
+              event["guest"] -> event["guest"]
               event["ap_name"] -> event["ap_name"]
               event["gw_name"] -> event["gw_name"]
               true -> "-"

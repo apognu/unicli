@@ -8,6 +8,7 @@ defmodule UniCLI.Clients do
     "Last seen",
     "Wired?",
     "Guest?",
+    "Authorized?",
     "WAN up",
     "WAN down",
     "LAN up",
@@ -19,6 +20,8 @@ defmodule UniCLI.Clients do
       [:list] -> list(settings, options)
       [:block] -> set_state(settings, true, options)
       [:unblock] -> set_state(settings, false, options)
+      [:kick] -> kick(settings, options)
+      [:guests | subcommands] -> UniCLI.Clients.Guests.run(settings, subcommands, options)
     end
   end
 
@@ -46,6 +49,7 @@ defmodule UniCLI.Clients do
             seen,
             if(client["is_wired"], do: "✓", else: "✗"),
             if(client["is_guest"], do: "✓", else: "✗"),
+            if(client["is_guest"], do: if(client["authorized"], do: "✓", else: "✗"), else: "-"),
             Size.humanize!(client["rx_bytes"] || 0),
             Size.humanize!(client["tx_bytes"] || 0),
             Size.humanize!(client["wired-rx_bytes"] || 0),
@@ -56,6 +60,19 @@ defmodule UniCLI.Clients do
 
       {:error, error} ->
         IO.puts("ERROR: could not get data: #{error}")
+    end
+  end
+
+  def kick(settings, %Optimus.ParseResult{args: %{mac: client_mac}}) do
+    case UniCLI.HTTP.request(settings, :post, "/cmd/stamgr", %{
+           "cmd" => "kick-sta",
+           "mac" => client_mac
+         }) do
+      {:ok, _} ->
+        IO.puts("Client '#{client_mac}' was kicked from the network.")
+
+      {:error, error} ->
+        IO.puts("ERROR: could not set state: #{error}")
     end
   end
 

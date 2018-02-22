@@ -169,6 +169,48 @@ defmodule CLI do
                   parser: :string
                 ]
               ]
+            ],
+            kick: [
+              name: "kick",
+              description: "kick a guest from their network",
+              args: [
+                mac: [
+                  value_name: "CLIENT_MAC",
+                  help: "MAC address of the client to unauthorize",
+                  required: true,
+                  parser: :string
+                ]
+              ]
+            ],
+            guests: [
+              name: "guests",
+              description: "manage guest clients",
+              subcommands: [
+                authorize: [
+                  name: "authorize",
+                  description: "authorize a guest",
+                  args: [
+                    mac: [
+                      value_name: "CLIENT_MAC",
+                      help: "MAC address of the client to authorize",
+                      required: true,
+                      parser: :string
+                    ]
+                  ]
+                ],
+                unauthorize: [
+                  name: "unauthorize",
+                  description: "unauthorize a guest",
+                  args: [
+                    mac: [
+                      value_name: "CLIENT_MAC",
+                      help: "MAC address of the client to unauthorize",
+                      required: true,
+                      parser: :string
+                    ]
+                  ]
+                ]
+              ]
             ]
           ]
         ],
