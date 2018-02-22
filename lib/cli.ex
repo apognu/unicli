@@ -34,7 +34,15 @@ defmodule CLI do
             adopt: [
               name: "adopt",
               description: "adopt a new device",
-              options: @site
+              options: @site,
+              args: [
+                mac: [
+                  value_name: "DEVICE_MAC",
+                  help: "MAC of the device to adopt",
+                  required: true,
+                  parser: :string
+                ]
+              ]
             ],
             provision: [
               name: "provision",

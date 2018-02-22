@@ -49,6 +49,9 @@ defmodule UniCLI.Devices do
 
       [:provision] ->
         UniCLI.Devices.Manage.provision(settings, options)
+
+      [:adopt] ->
+        UniCLI.Devices.Manage.adopt(settings, options)
     end
   end
 

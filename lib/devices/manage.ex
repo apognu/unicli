@@ -15,4 +15,17 @@ defmodule UniCLI.Devices.Manage do
   else
     _ -> IO.puts("ERROR: could not find device")
   end
+
+  def adopt(settings, %Optimus.ParseResult{args: %{mac: mac}}) do
+    case UniCLI.HTTP.request(settings, :post, "/cmd/devmgr", %{
+           "cmd" => "adopt",
+           "mac" => mac
+         }) do
+      {:ok, _} ->
+        IO.puts("Device '#{mac}' is being adopted.")
+
+      {:error, error} ->
+        IO.puts("ERROR: could not set state: #{error}")
+    end
+  end
 end
