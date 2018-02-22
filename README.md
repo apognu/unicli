@@ -18,6 +18,16 @@ In order to pass those settings to UniCLI, pass the following environment variab
 
 UniCLI creates ```~/.unicli/cookies.json``` to store fetched cookies and reuse them for the next requests.
 
+### Run with docker
+
+You can run UniCLI from Docker with the following command:
+
+```
+$ cd unicli
+$ docker build -t unicli:latest .
+$ docker run -e UNIFI_HOST=https://10.0.0.1:8443 -e UNIFI_USERNAME=rose.tyler -e UNIFI_PASSWORD=superpassword unicli:latest devices list
+```
+
 ### Devices
 
 #### List devices
@@ -140,10 +150,10 @@ Client '00:11:22:33:44:55' was blocked.
 
 ```
 $ unicli vouchers list
-ID                        Code         Validity   Usable   Down        Up          Quota   Note
+ID                        Code          Validity   Usable   Down        Up          Quota   Note
 
-dmu898nx3c4sd8ylb3ctrfhd  5190950304   1d         ∞        2.05 Mbps   2.05 Mbps   1 GB    Bob Dylan
-dmu898nx3c4sd8ylb3ctrfhd  0338780149   1d         0/1      -           -           -       Mum
+dmu898nx3c4sd8ylb3ctrfhd  51909-50304   1d         ∞        2.05 Mbps   2.05 Mbps   1 GB    Bob Dylan
+dmu898nx3c4sd8ylb3ctrfhd  03387-80149   1d         0/1      -           -           -       Mum
 ```
 
 #### Create a voucher
