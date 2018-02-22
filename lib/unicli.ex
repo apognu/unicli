@@ -1,5 +1,5 @@
 defmodule UniCLI.Settings do
-  defstruct host: "", username: "", password: "", directory: nil
+  defstruct host: "", username: "", password: "", site: "default", directory: nil
 
   def check(settings) do
     if settings.host == "https://demo.ubnt.com" do
@@ -48,6 +48,14 @@ defmodule UniCLI do
     parser =
       Optimus.new!(CLI.options())
       |> Optimus.parse!(args)
+
+    site =
+      case parser do
+        {_, %Optimus.ParseResult{options: %{site: site}}} -> site
+        _ -> "default"
+      end
+
+    settings = %{settings | site: site}
 
     case parser do
       {[:devices | subcommands], %Optimus.ParseResult{} = options} ->

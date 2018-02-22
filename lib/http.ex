@@ -66,8 +66,9 @@ defmodule UniCLI.HTTP do
 
   def request(settings, :get, url, _body) do
     with {:ok, cookies} <- login(settings),
+         {:ok, site} <- Map.fetch(settings, :site),
          {:ok, %Tesla.Env{status: 200, body: body}} <-
-           get(settings.host <> "/api/s/default" <> url, headers: cookies) do
+           get(settings.host <> "/api/s/" <> site <> url, headers: cookies) do
       {:ok, body}
     else
       {:ok, %Tesla.Env{status: code}} -> {:error, code}
@@ -77,8 +78,9 @@ defmodule UniCLI.HTTP do
 
   def request(settings, :post, url, body) do
     with {:ok, cookies} <- login(settings),
+         {:ok, site} <- Map.fetch(settings, :site),
          {:ok, %Tesla.Env{status: 200, body: body}} <-
-           post(settings.host <> "/api/s/default" <> url, body, headers: cookies) do
+           post(settings.host <> "/api/s/" <> site <> url, body, headers: cookies) do
       {:ok, body}
     else
       {:ok, %Tesla.Env{status: code}} -> {:error, code}
@@ -88,8 +90,9 @@ defmodule UniCLI.HTTP do
 
   def request(settings, :put, url, body) do
     with {:ok, cookies} <- login(settings),
+         {:ok, site} <- Map.fetch(settings, :site),
          {:ok, %Tesla.Env{status: 200, body: body}} <-
-           put(settings.host <> "/api/s/default" <> url, body, headers: cookies) do
+           put(settings.host <> "/api/s/" <> site <> url, body, headers: cookies) do
       {:ok, body}
     else
       {:ok, %Tesla.Env{status: code}} -> {:error, code}

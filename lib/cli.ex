@@ -1,4 +1,15 @@
 defmodule CLI do
+  @site [
+    site: [
+      short: "-s",
+      long: "--site",
+      help: "which site to talk to",
+      default: "default",
+      parser: :string,
+      required: true
+    ]
+  ]
+
   def options do
     [
       name: "unicli",
@@ -14,11 +25,13 @@ defmodule CLI do
           subcommands: [
             list: [
               name: "list",
-              description: "list all adopted UniFi devices"
+              description: "list all adopted UniFi devices",
+              options: @site
             ],
             locate: [
               name: "locate",
               description: "enable or disable blinking of device LEDs",
+              options: @site,
               args: [
                 id: [
                   value_name: "DEVICE_ID",
@@ -45,6 +58,7 @@ defmodule CLI do
                 list: [
                   name: "list",
                   description: "list all ports on a device",
+                  options: @site,
                   args: [
                     id: [
                       value_name: "DEVICE_ID",
@@ -57,6 +71,7 @@ defmodule CLI do
                 disable: [
                   name: "disable",
                   description: "disable a port",
+                  options: @site,
                   args: [
                     device_id: [
                       value_name: "DEVICE_ID",
@@ -75,6 +90,7 @@ defmodule CLI do
                 enable: [
                   name: "enable",
                   description: "enable a port",
+                  options: @site,
                   args: [
                     device_id: [
                       value_name: "DEVICE_ID",
@@ -104,11 +120,13 @@ defmodule CLI do
               subcommands: [
                 list: [
                   name: "list",
-                  description: "list all configured wireless networks"
+                  description: "list all configured wireless networks",
+                  options: @site
                 ],
                 enable: [
                   name: "enable",
                   description: "enable a specific wireless network",
+                  options: @site,
                   args: [
                     id: [
                       value_name: "NETWORK_ID",
@@ -121,6 +139,7 @@ defmodule CLI do
                 disable: [
                   name: "disable",
                   description: "disable a specific wireless network",
+                  options: @site,
                   args: [
                     id: [
                       value_name: "NETWORK_ID",
@@ -134,7 +153,8 @@ defmodule CLI do
             ],
             list: [
               name: "list",
-              description: "list all UniFi virtual networks"
+              description: "list all UniFi virtual networks",
+              options: @site
             ]
           ]
         ],
@@ -144,11 +164,13 @@ defmodule CLI do
           subcommands: [
             list: [
               name: "list",
-              description: "list all connected users"
+              description: "list all connected users",
+              options: @site
             ],
             block: [
               name: "block",
               description: "block a client from the network",
+              options: @site,
               args: [
                 mac: [
                   value_name: "CLIENT_MAC",
@@ -161,6 +183,7 @@ defmodule CLI do
             unblock: [
               name: "unblock",
               description: "unblock a client from the network",
+              options: @site,
               args: [
                 mac: [
                   value_name: "CLIENT_MAC",
@@ -173,6 +196,7 @@ defmodule CLI do
             kick: [
               name: "kick",
               description: "kick a guest from their network",
+              options: @site,
               args: [
                 mac: [
                   value_name: "CLIENT_MAC",
@@ -189,6 +213,7 @@ defmodule CLI do
                 authorize: [
                   name: "authorize",
                   description: "authorize a guest",
+                  options: @site,
                   args: [
                     mac: [
                       value_name: "CLIENT_MAC",
@@ -201,6 +226,7 @@ defmodule CLI do
                 unauthorize: [
                   name: "unauthorize",
                   description: "unauthorize a guest",
+                  options: @site,
                   args: [
                     mac: [
                       value_name: "CLIENT_MAC",
@@ -220,63 +246,66 @@ defmodule CLI do
           subcommands: [
             list: [
               name: "list",
-              description: "list all active vouchers"
+              description: "list all active vouchers",
+              options: @site
             ],
             create: [
               name: "create",
               description: "create a voucher",
-              options: [
-                number: [
-                  short: "-n",
-                  help: "how many vouchers to create",
-                  default: 1,
-                  parser: :integer
-                ],
-                validity: [
-                  short: "-e",
-                  help: "validity duration (as ISO8601 durations, e.g. PT24H, etc.)",
-                  default: 1440,
-                  parser: fn d ->
-                    case Timex.Duration.parse(d) do
-                      {:error, _} -> {:error, "invalid validity duration"}
-                      {:ok, seconds} -> {:ok, round(Timex.Duration.to_minutes(seconds))}
+              options:
+                [
+                  number: [
+                    short: "-n",
+                    help: "how many vouchers to create",
+                    default: 1,
+                    parser: :integer
+                  ],
+                  validity: [
+                    short: "-e",
+                    help: "validity duration (as ISO8601 durations, e.g. PT24H, etc.)",
+                    default: 1440,
+                    parser: fn d ->
+                      case Timex.Duration.parse(d) do
+                        {:error, _} -> {:error, "invalid validity duration"}
+                        {:ok, seconds} -> {:ok, round(Timex.Duration.to_minutes(seconds))}
+                      end
                     end
-                  end
-                ],
-                usage: [
-                  short: "-t",
-                  help: "number of times this voucher can be used (0 for unlimited)",
-                  default: 1,
-                  parser: :integer
-                ],
-                comment: [
-                  short: "-c",
-                  help: "comment",
-                  default: "Created from UniCLI"
-                ],
-                quota: [
-                  short: "-q",
-                  help: "usage quota in MB",
-                  default: 0,
-                  parser: :integer
-                ],
-                quota_download: [
-                  short: "-d",
-                  help: "download bandwidth limit in Kbps",
-                  default: 0,
-                  parser: :integer
-                ],
-                quota_upload: [
-                  short: "-u",
-                  help: "upload bandwidth limit in Kbps",
-                  default: 0,
-                  parser: :integer
-                ]
-              ]
+                  ],
+                  usage: [
+                    short: "-t",
+                    help: "number of times this voucher can be used (0 for unlimited)",
+                    default: 1,
+                    parser: :integer
+                  ],
+                  comment: [
+                    short: "-c",
+                    help: "comment",
+                    default: "Created from UniCLI"
+                  ],
+                  quota: [
+                    short: "-q",
+                    help: "usage quota in MB",
+                    default: 0,
+                    parser: :integer
+                  ],
+                  quota_download: [
+                    short: "-d",
+                    help: "download bandwidth limit in Kbps",
+                    default: 0,
+                    parser: :integer
+                  ],
+                  quota_upload: [
+                    short: "-u",
+                    help: "upload bandwidth limit in Kbps",
+                    default: 0,
+                    parser: :integer
+                  ]
+                ] ++ @site
             ],
             revoke: [
               name: "revoke",
               description: "revoke a voucher",
+              options: @site,
               args: [
                 id: [
                   value_name: "VOUCHER_ID",
@@ -290,11 +319,13 @@ defmodule CLI do
         ],
         events: [
           name: "events",
-          description: "list events"
+          description: "list events",
+          options: @site
         ],
         alarms: [
           name: "alarms",
-          description: "list alarms"
+          description: "list alarms",
+          options: @site
         ]
       ]
     ]
