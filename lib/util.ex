@@ -27,8 +27,6 @@ defmodule UniCLI.Util do
             end)
             |> Map.new()
 
-          IO.inspect(status)
-
           [
             site["name"],
             site["desc"],
