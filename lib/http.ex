@@ -1,6 +1,7 @@
 defmodule UniCLI.HTTP do
   use Tesla
 
+  plug(Tesla.Middleware.Timeout, timeout: 4000)
   plug(Tesla.Middleware.JSON)
 
   # Fetch a cookie to authenticate against the controller
