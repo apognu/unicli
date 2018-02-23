@@ -13,8 +13,9 @@ defmodule UniCLI.Events.Alerts do
         Enum.map(alerts, fn alert ->
           device =
             cond do
-              alert["ap_name"] -> alert["ap_name"]
               alert["gw_name"] -> alert["gw_name"]
+              alert["ap_name"] -> alert["ap_name"]
+              alert["sw_name"] -> alert["sw_name"]
               true -> "-"
             end
 
