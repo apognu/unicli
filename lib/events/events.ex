@@ -27,7 +27,7 @@ defmodule UniCLI.Events.Events do
             event["msg"]
           ]
         end)
-        |> UniCLI.Util.tableize(@list_headers)
+        |> UniCLI.Util.tableize(@list_headers, "No events found.")
 
       {:error, error} ->
         IO.puts("ERROR: could not get data: #{error}")

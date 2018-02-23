@@ -39,7 +39,7 @@ defmodule UniCLI.Devices.Ports do
                 Size.humanize!(port["tx_bytes"] || 0)
               ]
             end)
-            |> UniCLI.Util.tableize(@list_headers)
+            |> UniCLI.Util.tableize(@list_headers, "No ports found on this device.")
         end
 
       {:error, error} ->

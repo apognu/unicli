@@ -113,10 +113,10 @@ defmodule UniCLI.Devices do
             Size.humanize!(device["tx_bytes"] || 0)
           ]
         end)
-        |> UniCLI.Util.tableize(@list_headers)
+        |> UniCLI.Util.tableize(@list_headers, "No devices found.")
 
       {:error, error} ->
-        IO.puts("ERROR: could not get data (#{error})")
+        IO.puts("ERROR: could not get data: #{error}")
     end
   end
 

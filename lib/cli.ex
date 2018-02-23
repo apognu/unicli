@@ -351,9 +351,9 @@ defmodule CLI do
           description: "list events",
           options: @site
         ],
-        alarms: [
-          name: "alarms",
-          description: "list alarms",
+        alerts: [
+          name: "alerts",
+          description: "list alerts",
           options: @site
         ]
       ]

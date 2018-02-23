@@ -83,8 +83,7 @@ defmodule UniCLI.HTTP do
            get(settings.host <> "/api/s/" <> site <> url, headers: cookies) do
       {:ok, body}
     else
-      {:ok, %Tesla.Env{status: code}} -> {:error, code}
-      {:error, error} -> {:error, error}
+      error -> handle_error(error)
     end
   end
 
@@ -95,8 +94,7 @@ defmodule UniCLI.HTTP do
            post(settings.host <> "/api/s/" <> site <> url, body, headers: cookies) do
       {:ok, body}
     else
-      {:ok, %Tesla.Env{status: code}} -> {:error, code}
-      {:error, error} -> {:error, error}
+      error -> handle_error(error)
     end
   end
 
@@ -107,8 +105,23 @@ defmodule UniCLI.HTTP do
            put(settings.host <> "/api/s/" <> site <> url, body, headers: cookies) do
       {:ok, body}
     else
-      {:ok, %Tesla.Env{status: code}} -> {:error, code}
-      {:error, error} -> {:error, error}
+      error -> handle_error(error)
+    end
+  end
+
+  defp handle_error(error) do
+    case error do
+      {:ok, %Tesla.Env{status: 401, body: %{"meta" => %{"msg" => "api.err.NoSiteContext"}}}} ->
+        {:error, "provided site does not exist"}
+
+      {:ok, %Tesla.Env{status: code}} ->
+        {:error, code}
+
+      {:error, error} ->
+        {:error, error}
+
+      _ ->
+        {:error, "unknown error"}
     end
   end
 end

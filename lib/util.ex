@@ -44,9 +44,9 @@ defmodule UniCLI.Util do
     end
   end
 
-  def tableize(rows, headers) do
+  def tableize(rows, headers, empty_message \\ "No data found") do
     if length(rows) == 0 do
-      IO.puts("Nothing to display.")
+      IO.puts(empty_message)
     else
       rows
       |> TableRex.Table.new(headers)

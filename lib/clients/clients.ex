@@ -56,7 +56,7 @@ defmodule UniCLI.Clients do
             Size.humanize!(client["wired-tx_bytes"] || 0)
           ]
         end)
-        |> UniCLI.Util.tableize(@list_headers)
+        |> UniCLI.Util.tableize(@list_headers, "No clients found.")
 
       {:error, error} ->
         IO.puts("ERROR: could not get data: #{error}")

@@ -30,7 +30,7 @@ defmodule UniCLI.Networks.Wireless do
             network["vlan"]
           ]
         end)
-        |> UniCLI.Util.tableize(@list_headers)
+        |> UniCLI.Util.tableize(@list_headers, "No wireless networks found.")
 
       {:error, error} ->
         IO.puts("ERROR: could not get data: #{error}")

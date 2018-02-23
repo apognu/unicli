@@ -1,4 +1,4 @@
-defmodule UniCLI.Events.Alarms do
+defmodule UniCLI.Events.Alerts do
   @list_headers [
     "",
     "Time",
@@ -9,25 +9,25 @@ defmodule UniCLI.Events.Alarms do
 
   def run(settings, _, _) do
     case UniCLI.HTTP.request(settings, :post, "/stat/alarm", %{"_limit" => 50}) do
-      {:ok, %{"data" => alarms}} ->
-        Enum.map(alarms, fn alarm ->
+      {:ok, %{"data" => alerts}} ->
+        Enum.map(alerts, fn alert ->
           device =
             cond do
-              alarm["ap_name"] -> alarm["ap_name"]
-              alarm["gw_name"] -> alarm["gw_name"]
+              alert["ap_name"] -> alert["ap_name"]
+              alert["gw_name"] -> alert["gw_name"]
               true -> "-"
             end
 
           [
-            if(alarm["archived"], do: "✓", else: "!"),
-            Timex.from_unix(alarm["time"], :millisecond)
+            if(alert["archived"], do: "✓", else: "!"),
+            Timex.from_unix(alert["time"], :millisecond)
             |> Timex.format!("%Y/%m/%d %l:%M%P", :strftime),
-            String.upcase(alarm["subsystem"]),
+            String.upcase(alert["subsystem"]),
             device,
-            alarm["msg"]
+            alert["msg"]
           ]
         end)
-        |> UniCLI.Util.tableize(@list_headers)
+        |> UniCLI.Util.tableize(@list_headers, "No alerts found.")
 
       {:error, error} ->
         IO.puts("ERROR: could not get data: #{error}")

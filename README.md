@@ -222,7 +222,7 @@ $ unicli vouchers revoke dmu898nx3c4sd8ylb3ctrfhd
 Voucher 'dmu898nx3c4sd8ylb3ctrfhd' was revoked.
 ```
 
-### Events and alarms
+### Events and alerts
 
 ```
 $ unicli events
@@ -236,7 +236,7 @@ Time                System   Device          Message
 2018/02/21  5:19pm  WLAN     CEO Office AP  AP[00:11:22:33:44:55] was connected
 2018/02/21  5:18pm  WLAN     CEO Office AP  AP[00:11:22:33:44:55] was restarted by Admin[rose.tyler]
 
-$ unicli alarms
+$ unicli alerts
 Time                    System   Device   Message
 
 !  2018/02/21  8:21pm   WLAN     AP-A     AP[00:11:22:33:44:55] was disconnected

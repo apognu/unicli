@@ -76,8 +76,8 @@ defmodule UniCLI do
       {[:events | subcommands], options} ->
         UniCLI.Events.Events.run(settings, subcommands, options)
 
-      {[:alarms | subcommands], options} ->
-        UniCLI.Events.Alarms.run(settings, subcommands, options)
+      {[:alerts | subcommands], options} ->
+        UniCLI.Events.Alerts.run(settings, subcommands, options)
 
       _ ->
         IO.puts("ERROR: unknown command")
