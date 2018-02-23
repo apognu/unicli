@@ -50,6 +50,9 @@ defmodule UniCLI.Devices do
       [:provision] ->
         UniCLI.Devices.Manage.provision(settings, options)
 
+      [:restart] ->
+        UniCLI.Devices.Manage.restart(settings, options)
+
       [:adopt] ->
         UniCLI.Devices.Manage.adopt(settings, options)
     end
@@ -135,7 +138,7 @@ defmodule UniCLI.Devices do
             IO.puts("Location state for '#{id}' was changed.")
 
           {:error, error} ->
-            IO.puts("ERROR: could not set state: #{error}")
+            IO.puts("ERROR: could not set location state: #{error}")
         end
 
       {:error, error} ->

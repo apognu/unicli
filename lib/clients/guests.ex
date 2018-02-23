@@ -21,7 +21,11 @@ defmodule UniCLI.Clients.Guests do
         end
 
       {:error, error} ->
-        IO.puts("ERROR: could not set state: #{error}")
+        if state do
+          IO.puts("ERROR: could not authorize client: #{error}")
+        else
+          IO.puts("ERROR: could not unauthorize client: #{error}")
+        end
     end
   end
 end

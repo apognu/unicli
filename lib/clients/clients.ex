@@ -72,7 +72,7 @@ defmodule UniCLI.Clients do
         IO.puts("Client '#{client_mac}' was kicked from the network.")
 
       {:error, error} ->
-        IO.puts("ERROR: could not set state: #{error}")
+        IO.puts("ERROR: could not kick client: #{error}")
     end
   end
 
@@ -91,7 +91,11 @@ defmodule UniCLI.Clients do
         end
 
       {:error, error} ->
-        IO.puts("ERROR: could not set state: #{error}")
+        if state do
+          IO.puts("ERROR: could not block client: #{error}")
+        else
+          IO.puts("ERROR: could not unblock client: #{error}")
+        end
     end
   end
 end

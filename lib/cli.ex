@@ -44,6 +44,19 @@ defmodule CLI do
                 ]
               ]
             ],
+            restart: [
+              name: "restart",
+              description: "restart a new device",
+              options: @site,
+              args: [
+                id: [
+                  value_name: "DEVICE_ID",
+                  help: "ID of the device to restart",
+                  required: true,
+                  parser: :string
+                ]
+              ]
+            ],
             provision: [
               name: "provision",
               description: "force provisionning of a device",

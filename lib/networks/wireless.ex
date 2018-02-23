@@ -40,10 +40,18 @@ defmodule UniCLI.Networks.Wireless do
   def set_state(settings, state, %Optimus.ParseResult{args: %{id: id}}) do
     case UniCLI.HTTP.request(settings, :put, "/rest/wlanconf/" <> id, %{"enabled" => state}) do
       {:ok, _} ->
-        IO.puts("State for wireless network '#{id}' was changed.")
+        if state do
+          IO.puts("Wireless network '#{id}' was enabled.")
+        else
+          IO.puts("Wireless network '#{id}' was disabled.")
+        end
 
       {:error, error} ->
-        IO.puts("ERROR: could not set state: #{error}")
+        if state do
+          IO.puts("ERROR: could not enable wireless network: #{error}")
+        else
+          IO.puts("ERROR: could not disable wireless network: #{error}")
+        end
     end
   end
 end

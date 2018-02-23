@@ -60,6 +60,13 @@ $ unicli devices adopt 00:11:22:33:44:55
 Device '00:11:22:33:44:55' is being adopted.
 ```
 
+#### Restart a device
+
+```
+$ unicli devices restart dmu898nx3c4sd8ylb3ctrfhd
+Device 'dmu898nx3c4sd8ylb3ctrfhd' is restarting.
+```
+
 #### Force provisionning of a device
 
 ```
