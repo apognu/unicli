@@ -107,9 +107,9 @@ defmodule UniCLI.Devices do
             uptime,
             "#{
               if(
-                device["upgrade_to_firmware"] != device["version"],
-                do: "✓ ",
-                else: "⬆ "
+                device["upgradable"],
+                do: "⬆ ",
+                else: "✓ "
               )
             }#{device["version"]}",
             Size.humanize!(device["rx_bytes"] || 0),
