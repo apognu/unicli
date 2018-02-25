@@ -2,6 +2,8 @@
 
 Query and control some features of the UniFi controller directly from your command-line.
 
+**WARNING:** This command-line utility is is not way related to Ubiquiti and is provided as is. It is only developed with the hardware I own and _may_ behave erroneously with your own.
+
 ## Usage
 
 ### Settings
@@ -163,12 +165,12 @@ Wireless network 'dmu898nx3c4sd8ylb3ctrfhd' state changed.
 
 ```
 $ unicli clients list
-MAC address        Make       Hostname  Network          IP address        Last seen    Wired?   Guest?   WAN up     WAN down  LAN up  LAN down
+MAC address        Manufac.   Hostname  Network          IP address        Last seen    ⇆  Gues.  Auth.   WAN                      LAN
 
-00:11:22:33:44:55  LcfcHefe   tialus    00 - Management                    1 day ago    ✓        ✗        10.62 MB   87.98 MB  0B      0B
-00:11:22:33:44:55  Ubiquiti                                                2 days ago   ✓        ✗        0 B        0 B       0B      0B
-00:11:22:33:44:55  Raspberr   alarm     20 - WiFi        192.22.0.253      2 days ago   ✓        ✗        0 B        0 B       0B      0B
-00:11:22:33:44:55  Lenovo                                                  Never        ✓        ✗        0 B        0 B       0B      0B
+00:11:22:33:44:55  LcfcHefe   tialus    00 - Management                    1 day ago    ✓   ✗      -       ▼ 10.62 MB ▲ 87.98 MB  ▼ 0B ▲ 0B
+00:11:22:33:44:55  Ubiquiti                                                2 days ago   ✓   ✗      -       ▼ 0 B ▲ 0 B            ▼ 0B ▲ 0B
+00:11:22:33:44:55  Raspberr   alarm     20 - WiFi        192.22.0.253      2 days ago   ✓   ✗      -       ▼ 0 B ▲ 0 B            ▼ 0B ▲ 0B
+00:11:22:33:44:55  Lenovo                                                  Never        ✓   ✓      ✓       ▼ 0 B ▲ 0 B            ▼ 0B ▲ 0B
 ```
 
 #### Block/unblock a client
