@@ -14,6 +14,7 @@ defmodule UniCLI.Events.Events do
             cond do
               event["hostname"] -> event["hostname"]
               event["guest"] -> event["guest"]
+              event["sw_name"] -> event["sw_name"]
               event["ap_name"] -> event["ap_name"]
               event["gw_name"] -> event["gw_name"]
               true -> "-"

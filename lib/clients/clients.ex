@@ -1,18 +1,16 @@
 defmodule UniCLI.Clients do
   @list_headers [
     "MAC address",
-    "Make",
+    "Manufac.",
     "Hostname",
     "Network",
     "IP address",
     "Last seen",
-    "Wired?",
-    "Guest?",
-    "Authorized?",
-    "WAN up",
-    "WAN down",
-    "LAN up",
-    "LAN down"
+    "⇆",
+    "Gues.",
+    "Auth.",
+    "WAN",
+    "LAN"
   ]
 
   def run(settings, subcommands, options) do
@@ -50,10 +48,12 @@ defmodule UniCLI.Clients do
             if(client["is_wired"], do: "✓", else: "✗"),
             if(client["is_guest"], do: "✓", else: "✗"),
             if(client["is_guest"], do: if(client["authorized"], do: "✓", else: "✗"), else: "-"),
-            Size.humanize!(client["rx_bytes"] || 0),
-            Size.humanize!(client["tx_bytes"] || 0),
-            Size.humanize!(client["wired-rx_bytes"] || 0),
-            Size.humanize!(client["wired-tx_bytes"] || 0)
+            "▼ #{Size.humanize!(client["tx_bytes"] || 0)} ▲ #{
+              Size.humanize!(client["rx_bytes"] || 0)
+            }",
+            "▼ #{Size.humanize!(client["wired-tx_bytes"] || 0)} ▲ #{
+              Size.humanize!(client["wired-rx_bytes"] || 0)
+            }"
           ]
         end)
         |> UniCLI.Util.tableize(@list_headers, "No clients found.")
