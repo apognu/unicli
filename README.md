@@ -26,8 +26,7 @@ You can run UniCLI from Docker with the following command:
 
 ```
 $ cd unicli
-$ docker build -t unicli:latest .
-$ docker run -e UNIFI_HOST=https://10.0.0.1:8443 -e UNIFI_USERNAME=rose.tyler -e UNIFI_PASSWORD=superpassword unicli:latest devices list
+$ docker run -e UNIFI_HOST=https://10.0.0.1:8443 -e UNIFI_USERNAME=rose.tyler -e UNIFI_PASSWORD=superpassword apognu/unicli:latest devices list
 ```
 
 ### Sites
