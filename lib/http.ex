@@ -109,6 +109,17 @@ defmodule UniCLI.HTTP do
     end
   end
 
+  def request(settings, :delete, url, _body) do
+    with {:ok, cookies} <- login(settings),
+         {:ok, site} <- Map.fetch(settings, :site),
+         {:ok, %Tesla.Env{status: 200, body: body}} <-
+           delete(settings.host <> "/api/s/" <> site <> url, headers: cookies) do
+      {:ok, body}
+    else
+      error -> handle_error(error)
+    end
+  end
+
   defp handle_error(error) do
     case error do
       {:ok, %Tesla.Env{status: 401, body: %{"meta" => %{"msg" => "api.err.NoSiteContext"}}}} ->

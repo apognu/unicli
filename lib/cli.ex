@@ -359,6 +359,73 @@ defmodule CLI do
             ]
           ]
         ],
+        radius: [
+          name: "radius",
+          description: "manage RADIUS users for 802.1X",
+          subcommands: [
+            users: [
+              name: "users",
+              description: "manage RADIUS users for 802.1X",
+              subcommands: [
+                list: [
+                  name: "list",
+                  description: "list all RADIUS users"
+                ],
+                delete: [
+                  name: "delete",
+                  description: "delete a RADIUS user",
+                  args: [
+                    id: [
+                      value_name: "USER_ID",
+                      help: "ID of the user to delete",
+                      required: true,
+                      parser: :string
+                    ]
+                  ]
+                ],
+                create: [
+                  name: "create",
+                  description: "create a new RADIUS user",
+                  args: [
+                    username: [
+                      value_name: "USERNAME",
+                      help: "username of the RADIUS user",
+                      required: true,
+                      parser: :string
+                    ],
+                    password: [
+                      value_name: "PASSWORD",
+                      help: "password of the RADIUS user",
+                      required: true,
+                      parser: :string
+                    ]
+                  ],
+                  options:
+                    [
+                      vlan: [
+                        short: "-v",
+                        help: "VLAN ID",
+                        default: "VLAN to put the user into",
+                        parser: :integer
+                      ],
+                      tunnel: [
+                        short: "-t",
+                        help: "TUNNEL_TYPE",
+                        default: "ID of the tunnel type",
+                        parser: :integer
+                      ],
+                      medium: [
+                        short: "-m",
+                        help: "TUNNEL_MEDIUM_TYPE",
+                        default: "ID of the tunnel medium type",
+                        parser: :integer
+                      ]
+                    ] ++ @site
+                ]
+              ]
+            ]
+          ]
+        ],
         events: [
           name: "events",
           description: "list events",

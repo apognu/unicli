@@ -73,6 +73,9 @@ defmodule UniCLI do
       {[:vouchers | subcommands], %Optimus.ParseResult{} = options} ->
         UniCLI.Vouchers.run(settings, subcommands, options)
 
+      {[:radius | subcommands], %Optimus.ParseResult{} = options} ->
+        UniCLI.RADIUS.run(settings, subcommands, options)
+
       {[:events | subcommands], options} ->
         UniCLI.Events.Events.run(settings, subcommands, options)
 
