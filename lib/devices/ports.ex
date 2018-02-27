@@ -26,19 +26,30 @@ defmodule UniCLI.Devices.Ports do
             device = hd(devices)
 
             device["port_table"]
-            |> Enum.map(fn port ->
-              [
-                port["port_idx"] || "-",
-                port["name"],
-                if(port["enable"], do: "✓", else: "✗"),
-                if(port["up"], do: "UP", else: "DOWN"),
-                port["stp_state"] || "-",
-                if(port["up"], do: port["speed"], else: "-"),
-                if(port["up"], do: if(port["full_duplex"], do: "FDX", else: "HDX"), else: "-"),
-                Size.humanize!(port["rx_bytes"] || 0),
-                Size.humanize!(port["tx_bytes"] || 0)
-              ]
+            |> Enum.with_index()
+            |> Enum.map(fn {port, row} ->
+              colors = []
+
+              colors =
+                case {port["enable"], port["up"]} do
+                  {false, _} -> [{2, row, UniCLI.Util.warning()} | colors]
+                  {true, true} -> [{2, row, UniCLI.Util.ok()}, {3, row, UniCLI.Util.ok()}]
+                  {true, false} -> [{2, row, UniCLI.Util.ok()}, {3, row, UniCLI.Util.warning()}]
+                end
+
+              {[
+                 port["port_idx"] || "-",
+                 port["name"],
+                 if(port["enable"], do: "✓", else: "✗"),
+                 if(port["up"], do: "UP", else: "DOWN"),
+                 port["stp_state"] || "-",
+                 if(port["up"], do: port["speed"], else: "-"),
+                 if(port["up"], do: if(port["full_duplex"], do: "FDX", else: "HDX"), else: "-"),
+                 Size.humanize!(port["rx_bytes"] || 0),
+                 Size.humanize!(port["tx_bytes"] || 0)
+               ], colors}
             end)
+            |> Enum.unzip()
             |> UniCLI.Util.tableize(@list_headers, "No ports found on this device.")
         end
 

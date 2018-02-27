@@ -21,12 +21,13 @@ defmodule UniCLI.RADIUS do
       {:ok, %{"data" => users}} ->
         users
         |> Enum.map(fn user ->
-          [
-            user["_id"],
-            user["name"],
-            user["vlan"]
-          ]
+          {[
+             user["_id"],
+             user["name"],
+             user["vlan"]
+           ], []}
         end)
+        |> Enum.unzip()
         |> UniCLI.Util.tableize(@headers, "No RADIUS users found.")
 
       {:error, error} ->

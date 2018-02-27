@@ -62,7 +62,8 @@ defmodule UniCLI.Devices do
     case UniCLI.HTTP.request(settings, :get, "/stat/device") do
       {:ok, %{"data" => devices}} ->
         devices
-        |> Enum.map(fn device ->
+        |> Enum.with_index()
+        |> Enum.map(fn {device, row} ->
           ip =
             if Map.has_key?(device, "network_table") do
               # Router
@@ -97,25 +98,38 @@ defmodule UniCLI.Devices do
                 "-"
             end
 
-          [
-            device["_id"],
-            device["model"],
-            device["name"],
-            @states[to_string(device["state"])] || "Unknown",
-            if(ip["ip"] != "", do: ip["ip"], else: "-"),
-            device["mac"],
-            uptime,
-            "#{
-              if(
-                device["upgradable"],
-                do: "⬆ ",
-                else: "✓ "
-              )
-            }#{device["version"]}",
-            Size.humanize!(device["rx_bytes"] || 0),
-            Size.humanize!(device["tx_bytes"] || 0)
-          ]
+          colors = []
+
+          colors =
+            case @states[to_string(device["state"])] do
+              "Disconnected" -> [{3, row, UniCLI.Util.danger()} | colors]
+              "Connected" -> [{3, row, UniCLI.Util.ok()} | colors]
+              _ -> [{3, row, UniCLI.Util.warning()} | colors]
+            end
+
+          colors =
+            if device["upgradable"], do: [{7, row, UniCLI.Util.warning()} | colors], else: colors
+
+          {[
+             device["_id"],
+             device["model"],
+             device["name"],
+             @states[to_string(device["state"])] || "Unknown",
+             if(ip["ip"] != "", do: ip["ip"], else: "-"),
+             device["mac"],
+             uptime,
+             "#{
+               if(
+                 device["upgradable"],
+                 do: "⬆ ",
+                 else: "✓ "
+               )
+             }#{device["version"]}",
+             Size.humanize!(device["rx_bytes"] || 0),
+             Size.humanize!(device["tx_bytes"] || 0)
+           ], colors}
         end)
+        |> Enum.unzip()
         |> UniCLI.Util.tableize(@list_headers, "No devices found.")
 
       {:error, error} ->

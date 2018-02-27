@@ -21,15 +21,16 @@ defmodule UniCLI.Networks.Wireless do
       {:ok, %{"data" => networks}} ->
         networks
         |> Enum.map(fn network ->
-          [
-            network["_id"],
-            network["name"],
-            if(network["enabled"], do: "✓", else: "✗"),
-            network["security"],
-            "#{network["wpa_mode"]}/#{network["wpa_enc"]}",
-            network["vlan"]
-          ]
+          {[
+             network["_id"],
+             network["name"],
+             if(network["enabled"], do: "✓", else: "✗"),
+             network["security"],
+             "#{network["wpa_mode"]}/#{network["wpa_enc"]}",
+             network["vlan"]
+           ], []}
         end)
+        |> Enum.unzip()
         |> UniCLI.Util.tableize(@list_headers, "No wireless networks found.")
 
       {:error, error} ->

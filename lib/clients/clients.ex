@@ -28,7 +28,8 @@ defmodule UniCLI.Clients do
     case UniCLI.HTTP.request(settings, :get, "/stat/sta") do
       {:ok, %{"data" => clients}} ->
         clients
-        |> Enum.map(fn client ->
+        |> Enum.with_index()
+        |> Enum.map(fn {client, row} ->
           seen =
             case client["last_seen"] do
               nil ->
@@ -39,25 +40,35 @@ defmodule UniCLI.Clients do
                 |> Timex.format!("{relative}", :relative)
             end
 
-          [
-            client["mac"],
-            client["oui"],
-            client["hostname"],
-            client["network"],
-            if(client["1x_identity"], do: client["1x_identity"], else: "-"),
-            client["ip"],
-            seen,
-            if(client["is_wired"], do: "✓", else: "✗"),
-            if(client["is_guest"], do: "✓", else: "✗"),
-            if(client["is_guest"], do: if(client["authorized"], do: "✓", else: "✗"), else: "-"),
-            "▼ #{Size.humanize!(client["tx_bytes"] || 0)} ▲ #{
-              Size.humanize!(client["rx_bytes"] || 0)
-            }",
-            "▼ #{Size.humanize!(client["wired-tx_bytes"] || 0)} ▲ #{
-              Size.humanize!(client["wired-rx_bytes"] || 0)
-            }"
-          ]
+          colors = []
+
+          colors =
+            case {client["is_guest"], client["authorized"]} do
+              {true, true} -> [{9, row, UniCLI.Util.ok()} | colors]
+              {true, false} -> [{9, row, UniCLI.Util.warning()} | colors]
+              _ -> colors
+            end
+
+          {[
+             client["mac"],
+             client["oui"],
+             client["hostname"],
+             client["network"],
+             if(client["1x_identity"], do: client["1x_identity"], else: "-"),
+             client["ip"],
+             seen,
+             if(client["is_wired"], do: "✓", else: "✗"),
+             if(client["is_guest"], do: "✓", else: "✗"),
+             if(client["is_guest"], do: if(client["authorized"], do: "✓", else: "✗"), else: "-"),
+             "▼ #{Size.humanize!(client["tx_bytes"] || 0)} ▲ #{
+               Size.humanize!(client["rx_bytes"] || 0)
+             }",
+             "▼ #{Size.humanize!(client["wired-tx_bytes"] || 0)} ▲ #{
+               Size.humanize!(client["wired-rx_bytes"] || 0)
+             }"
+           ], colors}
         end)
+        |> Enum.unzip()
         |> UniCLI.Util.tableize(@list_headers, "No clients found.")
 
       {:error, error} ->

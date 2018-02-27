@@ -20,14 +20,15 @@ defmodule UniCLI.Events.Events do
               true -> "-"
             end
 
-          [
-            Timex.from_unix(event["time"], :millisecond)
-            |> Timex.format!("%Y/%m/%d %l:%M%P", :strftime),
-            String.upcase(event["subsystem"]) || "AUTH",
-            device,
-            event["msg"]
-          ]
+          {[
+             Timex.from_unix(event["time"], :millisecond)
+             |> Timex.format!("%Y/%m/%d %l:%M%P", :strftime),
+             String.upcase(event["subsystem"]) || "AUTH",
+             device,
+             event["msg"]
+           ], []}
         end)
+        |> Enum.unzip()
         |> UniCLI.Util.tableize(@list_headers, "No events found.")
 
       {:error, error} ->

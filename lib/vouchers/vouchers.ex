@@ -31,30 +31,31 @@ defmodule UniCLI.Vouchers do
             Timex.Duration.from_minutes(voucher["duration"])
             |> Timex.format_duration(UniCLI.DurationFormatter)
 
-          [
-            voucher["_id"],
-            code,
-            duration,
-            quota(voucher["used"], voucher["quota"]),
-            if(
-              voucher["qos_rate_max_down"],
-              do:
-                "#{Size.humanize!(round(voucher["qos_rate_max_down"] / 8) * 1000, bits: true)}ps",
-              else: "-"
-            ),
-            if(
-              voucher["qos_rate_max_up"],
-              do: "#{Size.humanize!(round(voucher["qos_rate_max_up"] / 8) * 1000, bits: true)}ps",
-              else: "-"
-            ),
-            if(
-              voucher["qos_usage_quota"],
-              do: Size.humanize!(voucher["qos_usage_quota"] * 1024 * 1024),
-              else: "-"
-            ),
-            voucher["note"]
-          ]
+          {[
+             voucher["_id"],
+             code,
+             duration,
+             quota(voucher["used"], voucher["quota"]),
+             if(
+               voucher["qos_rate_max_down"],
+               do:
+                 "#{Size.humanize!(round(voucher["qos_rate_max_down"] / 8) * 1000, bits: true)}ps",
+               else: "-"
+             ),
+             if(
+               voucher["qos_rate_max_up"],
+               do: "#{Size.humanize!(round(voucher["qos_rate_max_up"] / 8) * 1000, bits: true)}ps",
+               else: "-"
+             ),
+             if(
+               voucher["qos_usage_quota"],
+               do: Size.humanize!(voucher["qos_usage_quota"] * 1024 * 1024),
+               else: "-"
+             ),
+             voucher["note"]
+           ], []}
         end)
+        |> Enum.unzip()
         |> UniCLI.Util.tableize(@list_headers, "No vouchers found.")
 
       {:error, error} ->

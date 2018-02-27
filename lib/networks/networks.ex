@@ -24,20 +24,21 @@ defmodule UniCLI.Networks do
       {:ok, %{"data" => networks}} ->
         networks
         |> Enum.map(fn network ->
-          [
-            network["_id"],
-            network["name"],
-            if(
-              network["enabled"],
-              do: "✓",
-              else: "✗"
-            ),
-            network["purpose"],
-            network["ip_subnet"],
-            network["domain_name"],
-            network["vlan"]
-          ]
+          {[
+             network["_id"],
+             network["name"],
+             if(
+               network["enabled"],
+               do: "✓",
+               else: "✗"
+             ),
+             network["purpose"],
+             network["ip_subnet"],
+             network["domain_name"],
+             network["vlan"]
+           ], []}
         end)
+        |> Enum.unzip()
         |> UniCLI.Util.tableize(@list_headers, "No networks found.")
 
       {:error, error} ->
