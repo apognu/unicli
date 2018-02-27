@@ -18,6 +18,29 @@ You may create another user, dedicated to be used with UniCLI.
 
 In order to pass those settings to UniCLI, pass the following environment variables to the program: ```UNIFI_HOST```, ```UNIFI_USERNAME```, ```UNIFI_PASSWORD```.
 
+Alternatively, you can create ```~/.unicli/profiles.json``` and list an arbitrary number of UniFI connection profiles, like so:
+
+```
+{
+  "default": {
+    "host": "https://unifi.acme.com",
+    "username": "admin",
+    "password": "superpassword"
+  },
+  "labs": {
+    "host": "https://unifi.labs.acme.com",
+    "username": "lab",
+    "password": "password"
+  }
+}
+```
+
+If this file exists, by default, the profile named ```default``` will be used. You can select a specific profile to be used for the connection with the ```UNIFI_PROFILE``` environment variable. In this mode of operation, if any of ```UNIFI_HOST```, ```UNIFI_USERNAME``` or ```UNIFI_PASSWORD``` is set, they will override the saved profile.
+
+```
+$ UNIFI_PROFILE=labs unicli sites
+```
+
 UniCLI creates ```~/.unicli/cookies.json``` to store fetched cookies and reuse them for the next requests.
 
 ### Run with docker
@@ -252,4 +275,51 @@ Time                    System   Device   Message
 ✓  2018/02/21  8:21pm   WLAN     AP-A     AP[00:11:22:33:44:55] was disconnected
 ✓  2018/02/21  8:21pm   WLAN     AP-D     AP[00:11:22:33:44:55] was disconnected
 ✓  2018/02/21  8:21pm   WLAN     AP-B     AP[00:11:22:33:44:55] was disconnected
+```
+
+### RADIUS users
+
+#### List users
+
+```
+$ unicli radius users list
+ID                        Username                        VLAN
+
+dmu898nx3c4sd8ylb3ctrfhd  rose.tyler@acme.com             30
+dmu898nx3c4sd8ylb3ctrfhd  martha.jones@acme.com           20
+dmu898nx3c4sd8ylb3ctrfhd  amelia.pond@acme.com            20
+dmu898nx3c4sd8ylb3ctrfhd  clara.oswald@acme.com           20
+```
+
+#### Create a user
+
+```
+$ unicli help radius users create
+create a new RADIUS user 0.0.1
+Antoine POPINEAU <antoine.popineau@appscho.com>
+
+USAGE:
+    unicli radius users create [-v VLAN] [-t TUNNEL] [-m MEDIUM] [--site SITE] USERNAME PASSWORD
+
+ARGS:
+
+    USERNAME        username of the RADIUS user
+    PASSWORD        password of the RADIUS user
+
+OPTIONS:
+
+    -v                VLAN ID (default: VLAN to put the user into)
+    -t                TUNNEL_TYPE (default: ID of the tunnel type)
+    -m                TUNNEL_MEDIUM_TYPE (default: ID of the tunnel medium type)
+    -s, --site        which site to talk to (default: default)
+
+$ unicli radius users create amelia.pond@acme.com mysuperpassword -v 100 -t 13 -m 6
+RADIUS user `amelia.pond@acme.com` was created.
+```
+
+#### Delete a user
+
+```
+$ unicli radius users delete dmu898nx3c4sd8ylb3ctrfhd
+User 'dmu898nx3c4sd8ylb3ctrfhd' was deleted.
 ```

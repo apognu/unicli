@@ -1,14 +1,32 @@
 defmodule UniCLI.Settings do
-  defstruct host: "", username: "", password: "", site: "default", directory: nil
+  defstruct profile: "", host: "", username: "", password: "", site: "default", directory: nil
 
   def check(settings) do
     if settings.host == "https://demo.ubnt.com" do
       true
     else
-      ~w(host username password)a
-      |> Enum.reduce(true, fn setting, acc ->
-        acc && Map.get(settings, setting) != ""
-      end)
+      profiles_file = "#{settings.directory}/profiles.json"
+
+      settings =
+        if settings.directory && File.exists?(profiles_file) do
+          with {:ok, file} <- File.read(profiles_file),
+               {:ok, data} <- Poison.decode(file),
+               {:ok, profile} <- Map.fetch(data, settings.profile) do
+            profile =
+              profile
+              |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
+              |> Map.new()
+
+            struct(settings, profile)
+          else
+            _ -> settings
+          end
+        end
+
+      {~w(host username password)a
+       |> Enum.reduce(true, fn setting, acc ->
+         acc && Map.get(settings, setting) != ""
+       end), settings}
     end
   end
 end
@@ -27,17 +45,22 @@ defmodule UniCLI do
       end
 
     settings =
-      with {:ok, [host: host, username: username, password: password]} <-
+      with {:ok, [profile: profile, host: host, username: username, password: password]} <-
              Confex.fetch_env(:unicli, UniCLI.Controller) do
         settings = %UniCLI.Settings{
+          profile: profile,
           host: host,
           username: username,
           password: password,
           directory: directory
         }
 
-        unless UniCLI.Settings.check(settings) do
-          IO.puts("ERROR: UNIFI_HOST, UNIFI_USERNAME and UNIFI_PASSWORD should be set")
+        {state, settings} = UniCLI.Settings.check(settings)
+
+        unless state do
+          IO.puts(
+            "ERROR: UNIFI_HOST, UNIFI_USERNAME and UNIFI_PASSWORD or a profile in ~/.unicli/profiles.json should be set"
+          )
 
           System.halt(1)
         end

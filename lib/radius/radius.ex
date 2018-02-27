@@ -56,7 +56,7 @@ defmodule UniCLI.RADIUS do
 
     case UniCLI.HTTP.request(settings, :post, "/rest/account", payload) do
       {:ok, _} ->
-        IO.puts("RADIUS user was created.")
+        IO.puts("RADIUS user '#{username}' was created.")
 
       {:error, error} ->
         IO.puts("ERROR: could not create RADIUS user: #{error}")
