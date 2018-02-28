@@ -2,32 +2,28 @@ defmodule UniCLI.Settings do
   defstruct profile: "", host: "", username: "", password: "", site: "default", directory: nil
 
   def check(settings) do
-    if settings.host == "https://demo.ubnt.com" do
-      true
-    else
-      profiles_file = "#{settings.directory}/profiles.json"
+    profiles_file = "#{settings.directory}/profiles.json"
 
-      settings =
-        if settings.directory && File.exists?(profiles_file) do
-          with {:ok, file} <- File.read(profiles_file),
-               {:ok, data} <- Poison.decode(file),
-               {:ok, profile} <- Map.fetch(data, settings.profile) do
-            profile =
-              profile
-              |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
-              |> Map.new()
+    settings =
+      if settings.directory && File.exists?(profiles_file) do
+        with {:ok, file} <- File.read(profiles_file),
+             {:ok, data} <- Poison.decode(file),
+             {:ok, profile} <- Map.fetch(data, settings.profile) do
+          profile =
+            profile
+            |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
+            |> Map.new()
 
-            struct(settings, profile)
-          else
-            _ -> settings
-          end
+          struct(settings, profile)
+        else
+          _ -> settings
         end
+      end
 
-      {~w(host username password)a
-       |> Enum.reduce(true, fn setting, acc ->
-         acc && Map.get(settings, setting) != ""
-       end), settings}
-    end
+    {~w(host username password)a
+     |> Enum.reduce(true, fn setting, acc ->
+       acc && Map.get(settings, setting) != ""
+     end), settings}
   end
 end
 
