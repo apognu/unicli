@@ -4,6 +4,7 @@ defmodule UniCLI.Util do
     "Name",
     "Alerts",
     "WAN",
+    "GTW",
     "LAN",
     "WLAN",
     "VPN"
@@ -30,7 +31,7 @@ defmodule UniCLI.Util do
             |> Map.new()
 
           colors =
-            ~w(wan lan www vpn)
+            ~w(www wan lan wlan vpn)
             |> Enum.with_index()
             |> Enum.map(fn {subsystem, column} ->
               if status[subsystem] do
@@ -51,9 +52,10 @@ defmodule UniCLI.Util do
              site["name"],
              site["desc"],
              site["num_new_alarms"],
+             if(status["www"], do: "✓", else: "✗"),
              if(status["wan"], do: "✓", else: "✗"),
              if(status["lan"], do: "✓", else: "✗"),
-             if(status["www"], do: "✓", else: "✗"),
+             if(status["wlan"], do: "✓", else: "✗"),
              if(status["vpn"], do: "✓", else: "✗")
            ], colors}
         end)

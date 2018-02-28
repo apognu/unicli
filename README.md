@@ -58,9 +58,9 @@ You can list all your sites with the following command:
 
 ```
 $ unicli sites
-ID       Name                 Alerts   WAN   LAN   WLAN   VPN
+ID       Name                 Alerts   WAN  GTW   LAN   WLAN   VPN
 
-default  ACME - Headquarters  0        ✓     ✓     ✓      ✗
+default  ACME - Headquarters  0        ✓    ✓     ✓     ✓      ✗
 ```
 
 You can then use the value in the ```ID``` column to scope your request to a specific site (with the ```-s``` option). If ommited, the site defaults to ```default```.
