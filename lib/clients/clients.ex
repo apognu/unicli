@@ -2,6 +2,7 @@ defmodule UniCLI.Clients do
   @list_headers [
     "MAC address",
     "Manufac.",
+    "Name",
     "Hostname",
     "Network",
     "802.1X identity",
@@ -44,14 +45,15 @@ defmodule UniCLI.Clients do
 
           colors =
             case {client["is_guest"], client["authorized"]} do
-              {true, true} -> [{9, row, UniCLI.Util.ok()} | colors]
-              {true, false} -> [{9, row, UniCLI.Util.warning()} | colors]
+              {true, true} -> [{10, row, UniCLI.Util.ok()} | colors]
+              {true, false} -> [{10, row, UniCLI.Util.warning()} | colors]
               _ -> colors
             end
 
           {[
              client["mac"],
              client["oui"],
+             client["name"],
              client["hostname"],
              client["network"],
              if(client["1x_identity"], do: client["1x_identity"], else: "-"),
