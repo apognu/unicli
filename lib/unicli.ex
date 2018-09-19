@@ -9,15 +9,26 @@ defmodule UniCLI.Settings do
         with {:ok, file} <- File.read(profiles_file),
              {:ok, data} <- Poison.decode(file),
              {:ok, profile} <- Map.fetch(data, settings.profile) do
+          overrides =
+            case Confex.fetch_env(:unicli, UniCLI.Controller) do
+              {:ok, overrides} -> overrides
+              _ -> []
+            end
+            |> Enum.reject(fn {_, v} -> v == "" end)
+
           profile =
             profile
-            |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
+            |> Enum.map(fn {k, v} ->
+              {String.to_atom(k), Keyword.get(overrides, String.to_atom(k), v)}
+            end)
             |> Map.new()
 
           struct(settings, profile)
         else
           _ -> settings
         end
+      else
+        settings
       end
 
     {~w(host username password)a

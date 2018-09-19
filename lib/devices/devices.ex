@@ -55,6 +55,9 @@ defmodule UniCLI.Devices do
 
       [:adopt] ->
         UniCLI.Devices.Manage.adopt(settings, options)
+
+      [] ->
+        IO.puts("ERROR: unknown command")
     end
   end
 
@@ -81,13 +84,15 @@ defmodule UniCLI.Devices do
           uptime =
             case device["uptime"] do
               int when is_integer(int) ->
-                int |> Timex.Duration.from_seconds()
+                int
+                |> Timex.Duration.from_seconds()
                 |> Timex.format_duration(UniCLI.DurationFormatter)
 
               string when is_binary(string) ->
                 case Integer.parse(string) do
                   {uptime, _} ->
-                    uptime |> Timex.Duration.from_seconds()
+                    uptime
+                    |> Timex.Duration.from_seconds()
                     |> Timex.format_duration(UniCLI.DurationFormatter)
 
                   :error ->
